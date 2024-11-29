@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SAT MATH PRACTICE Quiz Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            padding: 20px;
+            width: 60%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+        }
+        .quiz-content {
+            flex: 3;
+        }
+        .score-container {
+            flex: 1;
+            margin-left: 20px;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .stimulus {
+            background-color: #f0f4c3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        .question-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            margin-bottom: 20px;
+        }
+        .answer-button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #42a5f5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .answer-button:hover {
+            background-color: #1e88e5;
+        }
+        #explanation {
+            background-color: #fff3cd;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+        }
+        #next-btn {
+            margin-top: 20px;
+            display: none;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #next-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-content">
+            <h1>Quiz</h1>
+            <div id="name-section">
+                <label for="name">Hey there, enter your name?:</label>
+                <input type="text" id="name" placeholder="Connar?" required>
+                <button id="start-btn">Start Quiz</button>
+            </div>
+            <div id="quiz-section" style="display:none;">
+                <div id="stimulus" class="stimulus"></div>
+                <p class="question-number" id="question-number"></p>
+                <p class="question-text" id="question-text"></p>
+                <div id="choices-container"></div>
+                <div id="explanation"></div>
+                <button id="next-btn">Next Question</button>
+            </div>
+            <div id="result-section" style="display:none;">
+                <h2>Quiz Completed!</h2>
+                <p id="result-text"></p>
+            </div>
+        </div>
+        <div class="score-container">
+            <p>Correct Answers So Far:</p>
+            <p id="score-counter">0</p>
+        </div>
+    </div>
+
+    <script>
+const questions = [
+    {
+        question: "If 3x - 7 = 2x + 5, what is the value of x?",
+        choices: [
+            "5",
+            "7",
+            "12",
+            "2"
+        ],
+        correctAnswer: 0,
+        explanation: "Start by isolating x: Subtract 2x from both sides: 3x - 2x - 7 = 5. This simplifies to x - 7 = 5. Add 7 to both sides: x = 12."
+    },
+    {
+        question: "The sum of two numbers is 15, and their difference is 3. What are the two numbers?",
+        choices: [
+            "(9, 6)",
+            "(8, 7)",
+            "(10, 5)",
+            "(12, 3)"
+        ],
+        correctAnswer: 0,
+        explanation: "Let the numbers be x and y. From the equations x + y = 15 and x - y = 3, solve simultaneously: Add the equations: (x + y) + (x - y) = 15 + 3 → 2x = 18 → x = 9. Substitute x = 9 into x + y = 15: 9 + y = 15 → y = 6. So, the numbers are (9, 6)."
+    },
+    {
+        question: "What is the length of the diagonal of a rectangle with width 6 and height 8?",
+        choices: [
+            "10",
+            "12",
+            "14",
+            "16"
+        ],
+        correctAnswer: 0,
+        explanation: "Use the Pythagorean theorem for the diagonal of a rectangle: d² = w² + h². Here, d² = 6² + 8² → d² = 36 + 64 → d² = 100. Take the square root: d = √100 = 10."
+    },
+    {
+        question: "A line passes through points (2, 3) and (4, 7). What is the equation of the line?",
+        choices: [
+            "y = 2x - 1",
+            "y = x + 2",
+            "y = 2x - 2",
+            "y = 3x + 1"
+        ],
+        correctAnswer: 0,
+        explanation: "First, find the slope: m = (y₂ - y₁) / (x₂ - x₁) → m = (7 - 3) / (4 - 2) → m = 4 / 2 = 2. Now, use the slope-intercept form y = mx + b with one point (2, 3): 3 = 2(2) + b → 3 = 4 + b → b = -1. The equation is y = 2x - 1."
+    },
+    {
+        question: "If a circle has a circumference of 12π, what is its radius?",
+        choices: [
+            "6",
+            "12",
+            "24",
+            "3"
+        ],
+        correctAnswer: 0,
+        explanation: "The formula for circumference is C = 2πr. Substitute C = 12π: 12π = 2πr. Divide both sides by 2π: r = 6."
+    },
+    {
+        question: "What is the solution to |2x - 5| = 7?",
+        choices: [
+            "x = 6 and x = -1",
+            "x = 1 and x = -6",
+            "x = 6 and x = 1",
+            "x = 7 and x = -7"
+        ],
+        correctAnswer: 2,
+        explanation: "Split the absolute value equation into two cases: Case 1: 2x - 5 = 7 → Add 5 to both sides: 2x = 12 → Divide by 2: x = 6. Case 2: 2x - 5 = -7 → Add 5 to both sides: 2x = -2 → Divide by 2: x = -1. The solutions are x = 6 and x = -1."
+    },
+    {
+        question: "If f(x) = 3x² - 2x + 1, what is f(2)?",
+        choices: [
+            "9",
+            "11",
+            "15",
+            "17"
+        ],
+        correctAnswer: 3,
+        explanation: "Substitute x = 2 into f(x): f(2) = 3(2²) - 2(2) + 1 → f(2) = 3(4) - 4 + 1 → f(2) = 12 - 4 + 1 → f(2) = 17."
+    },
+    {
+        question: "What is the area of a triangle with vertices at (0, 0), (4, 0), and (4, 6)?",
+        choices: [
+            "12",
+            "24",
+            "36",
+            "48"
+        ],
+        correctAnswer: 1,
+        explanation: "The formula for the area of a triangle is A = (1/2) × base × height. Here, base = 4 (distance from (0, 0) to (4, 0)) and height = 6 (distance from (4, 0) to (4, 6)). Area = (1/2) × 4 × 6 = 12."
+    },
+    {
+        question: "Solve for x: (x + 3)(x - 4) = 0.",
+        choices: [
+            "-3 and 4",
+            "3 and -4",
+            "3 and 4",
+            "-3 and -4"
+        ],
+        correctAnswer: 0,
+        explanation: "Set each factor equal to 0: x + 3 = 0 → x = -3; x - 4 = 0 → x = 4. The solutions are x = -3 and x = 4."
+    },
+    {
+        question: "If the function g(x) = 2x + 1 and h(x) = x², what is g(h(3))?",
+        choices: [
+            "7",
+            "19",
+            "17",
+            "15"
+        ],
+        correctAnswer: 2,
+        explanation: "Find h(3) first: h(3) = 3² = 9. Then substitute h(3) = 9 into g(x): g(9) = 2(9) + 1 = 18 + 1 = 19."
+    },
+    {
+        question: "If sin(θ) = 3/5, what is cos(θ) assuming θ is in the first quadrant?",
+        choices: [
+            "4/5",
+            "-4/5",
+            "3/5",
+            "1"
+        ],
+        correctAnswer: 0,
+        explanation: "Using the Pythagorean identity sin²(θ) + cos²(θ) = 1, substitute sin(θ) = 3/5: (3/5)² + cos²(θ) = 1 → 9/25 + cos²(θ) = 1 → cos²(θ) = 16/25 → cos(θ) = 4/5 (positive in the first quadrant)."
+    },
+    {
+        question: "What is the vertex of the parabola given by y = 2x² - 4x + 1?",
+        choices: [
+            "(1, -1)",
+            "(-1, 1)",
+            "(2, -3)",
+            "(0, 1)"
+        ],
+        correctAnswer: 0,
+        explanation: "The vertex is given by x = -b / (2a). Here, a = 2 and b = -4: x = -(-4) / (2(2)) → x = 4 / 4 = 1. Substitute x = 1 into the equation: y = 2(1)² - 4(1) + 1 → y = 2 - 4 + 1 = -1. The vertex is (1, -1)."
+    },
+    {
+        question: "What is the solution to the inequality 3x - 7 > 2x + 5?",
+        choices: [
+            "x > 5",
+            "x < 5",
+            "x = 5",
+            "x ≥ 5"
+        ],
+        correctAnswer: 0,
+        explanation: "Subtract 2x from both sides: x - 7 > 5. Add 7 to both sides: x > 12. If you chose x < 5 or x ≥ 5, check your inequality signs carefully."
+    }
+];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userName = "";
+
+        const nameSection = document.getElementById('name-section');
+        const quizSection = document.getElementById('quiz-section');
+        const resultSection = document.getElementById('result-section');
+        const stimulusElement = document.getElementById('stimulus');
+        const questionNumberElement = document.getElementById('question-number');
+        const questionTextElement = document.getElementById('question-text');
+        const choicesContainer = document.getElementById('choices-container');
+        const explanationElement = document.getElementById('explanation');
+        const nextButton = document.getElementById('next-btn');
+        const scoreCounter = document.getElementById('score-counter');
+        const nameInput = document.getElementById('name');
+        const startButton = document.getElementById('start-btn');
+        const resultText = document.getElementById('result-text');
+
+        startButton.addEventListener('click', () => {
+            userName = nameInput.value.trim();
+            if (!userName) {
+                alert("Please enter your name to start the quiz.");
+                return;
+            }
+            nameSection.style.display = 'none';
+            quizSection.style.display = 'block';
+            loadQuestion();
+        });
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionNumberElement.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            stimulusElement.textContent = currentQuestion.stimulus;
+            questionTextElement.textContent = currentQuestion.question;
+            choicesContainer.innerHTML = '';
+            explanationElement.style.display = 'none';
+            nextButton.style.display = 'none';
+
+            currentQuestion.choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-button';
+                button.textContent = choice;
+                button.addEventListener('click', () => checkAnswer(index));
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const currentQuestion = questions[currentQuestionIndex];
+            explanationElement.style.display = 'block';
+
+            if (selectedIndex === currentQuestion.correctAnswer) {
+                explanationElement.textContent = "Correct! " + currentQuestion.explanation;
+                score++;
+                scoreCounter.textContent = score; // Update score counter
+                nextButton.style.display = 'block';
+            } else {
+                explanationElement.textContent = "Incorrect. " + currentQuestion.explanation;
+                nextButton.style.display = 'block';
+            }
+        }
+
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                endQuiz();
+            }
+        });
+
+        function endQuiz() {
+            quizSection.style.display = 'none';
+            resultSection.style.display = 'block';
+            resultText.textContent = `${userName}, you scored ${score} out of ${questions.length}!`;
+        }
+    </script>
+</body>
+</html>
